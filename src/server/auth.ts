@@ -2,6 +2,7 @@
 
 import { auth } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
+import { success } from "zod";
 
 export async function signIn(email: string, password: string) {
   try {
@@ -25,19 +26,25 @@ export async function signIn(email: string, password: string) {
   }
 }
 
-export async function signInWithGoogle() {
-  await authClient.signIn.social({
-    provider: "google",
-    callbackURL: "/matches",
-  });
-}
+export async function signUp(email: string, password: string, name: string) {
+  try {
+    await auth.api.signUpEmail({
+      body: {
+        email,
+        password,
+        name,
+      },
+    });
 
-export async function signUp() {
-  await auth.api.signUpEmail({
-    body: {
-      email: "yousef@g.com",
-      password: "password1234",
-      name: "yousef hakem",
-    },
-  });
+    return {
+      success: true,
+      message: "Signed Up Successfully.",
+    };
+  } catch (error) {
+    const e = error as Error;
+    return {
+      success: false,
+      message: e.message || "An unknown error occurred.",
+    };
+  }
 }

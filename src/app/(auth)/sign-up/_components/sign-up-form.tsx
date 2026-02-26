@@ -21,7 +21,7 @@ import {
   FieldSeparator,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { signIn, signUp } from "@/server/auth";
+import { signUp } from "@/server/auth";
 
 import { z } from "zod";
 import { toast } from "sonner";
@@ -30,10 +30,10 @@ import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 
-
 const formSchema = z.object({
   email: z.email(),
-  password: z.string().min(8),
+  password: z.string().min(8, {message: "Minimum 8 characters are required"}),
+  name: z.string().min(1, {message: "Fill out your name"}),
 });
 
 export async function signInWithGoogle() {
@@ -43,7 +43,7 @@ export async function signInWithGoogle() {
   });
 }
 
-export function LoginForm({
+export function SignUpForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
@@ -55,12 +55,17 @@ export function LoginForm({
     defaultValues: {
       email: "",
       password: "",
+      name: "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    const { success, message } = await signIn(values.email, values.password);
+    const { success, message } = await signUp(
+      values.email,
+      values.password,
+      values.name
+    );
     if (success) {
       toast.success(message as string);
       router.push("/matches");
@@ -74,9 +79,9 @@ export function LoginForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Welcome back</CardTitle>
+          <CardTitle className="text-xl">Welcome</CardTitle>
           <CardDescription>
-            Login with your Apple or Google account
+            Sign up with your Google account
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -100,6 +105,23 @@ export function LoginForm({
               <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
                 Or continue with
               </FieldSeparator>
+              <Controller
+                name="name"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="name">Name and Surname</FieldLabel>
+                    <Input
+                      {...field}
+                      aria-invalid={fieldState.invalid}
+                      id="name"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
               <Controller
                 name="email"
                 control={form.control}
@@ -131,25 +153,22 @@ export function LoginForm({
                       id="password"
                       type="password"
                     />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
                   </Field>
                 )}
               />
-              <a
-                href="#"
-                className="ml-auto text-sm underline-offset-4 hover:underline"
-              >
-                Forgot your password?
-              </a>
               <Field>
                 <Button type="submit" disabled={isLoading}>
                   {isLoading ? (
                     <Loader2 className="size-4 animate-spin" />
                   ) : (
-                    "Login"
+                    "Sign up"
                   )}
                 </Button>
                 <FieldDescription className="text-center">
-                  Don&apos;t have an account? <a href="/sign-up">Sign up</a>
+                  Already have an account? <a href="/login">Login</a>
                 </FieldDescription>
               </Field>
             </FieldGroup>

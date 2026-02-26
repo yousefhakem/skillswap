@@ -33,9 +33,9 @@ export default function Navbar() {
     <header className="sticky top-0 z-20 border-b bg-background/80 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
         <div className="flex items-center gap-6">
-          <Link href="/" className="text-sm font-semibold tracking-tight">
+          <span className="text-sm font-semibold tracking-tight">
             SkillSwap
-          </Link>
+          </span>
           <nav className="hidden items-center gap-4 md:flex">
             <NavLink href="/matches" label="Matches" />
             <NavLink href="/requests" label="Requests" />
