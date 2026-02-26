@@ -12,7 +12,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import SkillCombobox, { SkillOption } from "@/components/features/skills/SkillCombobox";
+import SkillCombobox, {
+  SkillOption,
+} from "@/components/features/skills/SkillCombobox";
 
 export type SkillLevel = "Beginner" | "Intermediate" | "Advanced";
 
@@ -65,7 +67,8 @@ export default function SkillEditor({
     setLevel("Intermediate");
   };
 
-  const removeSkill = (id: string) => onChange(items.filter((s) => s.id !== id));
+  const removeSkill = (id: string) =>
+    onChange(items.filter((s) => s.id !== id));
 
   return (
     <div className="space-y-3">
@@ -93,7 +96,10 @@ export default function SkillEditor({
           </div>
 
           <div className="flex gap-2">
-            <Select value={level} onValueChange={(v) => setLevel(v as SkillLevel)}>
+            <Select
+              value={level}
+              onValueChange={(v) => setLevel(v as SkillLevel)}
+            >
               <SelectTrigger className="w-full md:w-[180px]">
                 <SelectValue placeholder="Level" />
               </SelectTrigger>
@@ -112,7 +118,9 @@ export default function SkillEditor({
 
         <div className="mt-3 flex flex-wrap gap-2">
           {items.length === 0 ? (
-            <div className="text-xs text-muted-foreground">No skills added yet.</div>
+            <div className="text-xs text-muted-foreground">
+              No skills added yet.
+            </div>
           ) : (
             items.map((s) => (
               <Badge key={s.id} variant="secondary" className="gap-2">
